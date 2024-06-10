@@ -1,0 +1,33 @@
+﻿<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\RobustToolbox.props" />
+  <PropertyGroup>
+    <!-- Work around https://github.com/dotnet/project-system/issues/4314 -->
+    <TargetFramework>$(TargetFramework)</TargetFramework>
+    <LangVersion>12</LangVersion>
+    <IsPackable>false</IsPackable>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <WarningsAsErrors>nullable</WarningsAsErrors>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="$(RobustToolboxLocation)/Lidgren.Network/Lidgren.Network.csproj">
+      <Private>false</Private>
+    </ProjectReference>
+    <ProjectReference Include="$(RobustToolboxLocation)/Robust.Shared.Maths/Robust.Shared.Maths.csproj">
+      <Private>false</Private>
+    </ProjectReference>
+    <ProjectReference Include="$(RobustToolboxLocation)/Robust.Shared/Robust.Shared.csproj">
+      <Private>false</Private>
+    </ProjectReference>
+  </ItemGroup>
+
+  <Import Project="$(RobustToolboxLocation)/MSBuild/Robust.Properties.targets" />
+  <Import Project="$(RobustToolboxLocation)/MSBuild/Robust.CompNetworkGenerator.targets" />
+</Project>
