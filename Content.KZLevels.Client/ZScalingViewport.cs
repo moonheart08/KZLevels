@@ -1,4 +1,12 @@
-﻿using System;
+﻿/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ * This Source Code Form is "Incompatible With Secondary Licenses", as
+ * defined by the Mozilla Public License, v. 2.0.
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Numerics;
 using Microsoft.CodeAnalysis.Elfie.Diagnostics;
@@ -161,10 +169,12 @@ public sealed class ZScalingViewport : Control, IViewportControl
             _zStack ??= _entityManager.System<ZStackSystem>();
             var map = _eye.Position.MapId;
             var id = _mapManager.GetMapEntityIdOrThrow(map);
+
             if (_zStack.TryGetZStack(id, out var stack))
             {
                 var first = true;
                 var idx = 0;
+                var depth = stack.Value.Comp.Maps.IndexOf(id);
                 foreach (var toDraw in stack.Value.Comp.Maps)
                 {
                     if (first)
@@ -173,10 +183,10 @@ public sealed class ZScalingViewport : Control, IViewportControl
                         _viewport!.ClearColor = null;
 
                     var pos = new MapCoordinates(_eye.Position.Position, _entityManager.GetComponent<MapComponent>(toDraw).MapId);
-                    _viewport!.Eye = new ZBelowEye()
+                    _viewport!.Eye = new ZEye()
                     {
                         Position = pos, DrawFov = _eye.DrawFov, DrawLight = _eye.DrawLight, Offset = _eye.Offset,
-                        Rotation = _eye.Rotation, Scale = _eye.Scale,
+                        Rotation = _eye.Rotation, Scale = _eye.Scale - new Vector2(0.03f * depth, 0.03f * depth),
                         Depth = idx,
                         Top = toDraw == id,
                     };
@@ -185,6 +195,7 @@ public sealed class ZScalingViewport : Control, IViewportControl
 
                     first = false;
                     idx++;
+                    depth--;
                     if (toDraw == id) // Final, we're done here!
                         break;
                 }
@@ -448,7 +459,7 @@ public enum ScalingViewportIgnoreDimension
 }
 
 //FIXME: This is nasty!
-public sealed class ZBelowEye : Eye
+public sealed class ZEye : Eye
 {
     public int Depth;
     public bool Top;

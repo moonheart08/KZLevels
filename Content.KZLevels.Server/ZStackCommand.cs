@@ -1,4 +1,12 @@
-﻿using Content.KZlevels.Server.Systems;
+﻿/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ * This Source Code Form is "Incompatible With Secondary Licenses", as
+ * defined by the Mozilla Public License, v. 2.0.
+ */
+
+using Content.KZlevels.Server.Systems;
 using Robust.Server.GameObjects;
 using Robust.Shared.GameObjects;
 using Robust.Shared.IoC;
@@ -47,6 +55,22 @@ public sealed class ZStackCommand : ToolshedCommand
         _zStack.AddToStack(lowest, ref stackLoc);
         _zStack.AddToStack(lower, ref stackLoc);
         _zStack.AddToStack(map, ref stackLoc);
+
+        return stackLoc.Value;
+    }
+
+    [CommandImplementation("quick_stack_atop")]
+    public EntityUid QuickStackAtop([PipedArgument] EntityUid map)
+    {
+        _map ??= GetSys<MapSystem>();
+        _zStack ??= GetSys<ZStackSystem>();
+
+        var lowest = _map.CreateMap();
+        var lower = _map.CreateMap();
+        var stackLoc = (EntityUid?) null;
+        _zStack.AddToStack(map, ref stackLoc);
+        _zStack.AddToStack(lower, ref stackLoc);
+        _zStack.AddToStack(lowest, ref stackLoc);
 
         return stackLoc.Value;
     }
