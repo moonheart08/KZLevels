@@ -178,10 +178,8 @@ public sealed class ZScalingViewport : Control, IViewportControl
                         Position = pos, DrawFov = _eye.DrawFov, DrawLight = _eye.DrawLight, Offset = _eye.Offset,
                         Rotation = _eye.Rotation, Scale = _eye.Scale,
                         Depth = idx,
+                        Top = toDraw == id,
                     };
-                    //Logger.Debug($"Rendering {pos}");
-                    //if (toDraw == id)
-                    //    _viewport!.Eye = _eye;
 
                     _viewport!.Render();
 
@@ -453,4 +451,5 @@ public enum ScalingViewportIgnoreDimension
 public sealed class ZBelowEye : Eye
 {
     public int Depth;
+    public bool Top;
 }
