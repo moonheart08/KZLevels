@@ -15,5 +15,5 @@ namespace Content.KZlevels.Server.Components;
 [RegisterComponent]
 public sealed partial class ZViewerComponent : Component
 {
-    public HashSet<EntityUid>
+    public HashSet<EntityUid> Loaders = new();
 }
